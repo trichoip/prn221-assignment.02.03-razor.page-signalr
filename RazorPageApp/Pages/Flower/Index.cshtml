@@ -1,0 +1,113 @@
+﻿@page
+@model RazorPageApp.Pages.Flower.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+    <div>
+        <span style="color:blue">@TempData["Message"]</span>
+        <span style="color:aqua" id="messages"></span>
+    </div>
+</p>
+<form asp-page="index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            <input type="hidden" id="PageIndex" value="@Model.FlowerBouquet.PageIndex" />
+            <select id="SearchField" name="SearchField" asp-items="ViewBag.SearchField"></select>
+            <input id="SearchString" type="text" name="SearchString" value="@Model.CurrentFilterSearchString" />
+            <input type="submit" value="Search" class="btn btn-primary" /> |
+            <a asp-page="index">Back to full List</a>
+            <hr />
+            <span id="TotalProduct" style="color:chartreuse"></span>
+        </p>
+    </div>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FlowerBouquet[0].FlowerBouquetName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FlowerBouquet[0].Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FlowerBouquet[0].UnitPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FlowerBouquet[0].UnitsInStock)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FlowerBouquet[0].FlowerBouquetStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FlowerBouquet[0].Category)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FlowerBouquet[0].Supplier)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody id="dataProduct">
+        @foreach (var item in Model.FlowerBouquet)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FlowerBouquetName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UnitPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UnitsInStock)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FlowerBouquetStatus)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category.CategoryName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Supplier.SupplierName)
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.FlowerBouquetId">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.FlowerBouquetId">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.FlowerBouquetId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@{
+    var prevDisabled = !Model.FlowerBouquet.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.FlowerBouquet.HasNextPage ? "disabled" : "";
+}
+
+<a asp-page="index"
+   asp-route-pageIndex="@(Model.FlowerBouquet.PageIndex - 1)"
+   asp-route-SearchString="@Model.CurrentFilterSearchString"
+   asp-route-SearchField="@ViewBag.CurrentSearchField"
+   class="btn btn-primary @prevDisabled">
+    Previous
+</a>
+<a asp-page="index"
+   asp-route-pageIndex="@(Model.FlowerBouquet.PageIndex + 1)"
+   asp-route-SearchString="@Model.CurrentFilterSearchString"
+   asp-route-SearchField="@ViewBag.CurrentSearchField"
+   class="btn btn-primary @nextDisabled">
+    Next
+</a>
+
+<script src="~/signalr/dist/browser/signalr.js"></script>
+<script src="~/signalr/site.js"></script>
